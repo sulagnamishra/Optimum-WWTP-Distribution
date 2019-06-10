@@ -12,9 +12,9 @@ The sampling of water and sediments we conducted along Lockwitzbach in Germany, 
 1. Rainfall time series ( atleast 2 years of data)
 2. Digital Elevation Map
 3. Flow data ( atleast 2 years)
-4. 
+4. Catchment properties like roughness, landuse, soil cover, soil type (optional)
 
-### Preprocessing (Required functions)
+### Processing (Function definations and working)
 1. Extract the river network (File name "Catchment") from the DEM along with the properties like reach length, slope, connectivity etc. 
 In the example code, this information is contained in file Lockwitz.  
 
@@ -28,35 +28,27 @@ This can be done using GIS using DEM or Matlab/R using data file "Catchment". Th
 Read the rain fall time series and extract the PDFs of inter arrival time and rainfall depths. distfinder()
 Based on the PDF - e.g. possion/power/etc., use distcreator () to generate data of the same distribution. 
 
+4. Flow generator : Reads the network properties and generates flow using the 2 bucket method for "days" provided in the function call. 
+The recession constants R1 and R2 - slow and fast reserviors are predefined inside the function defination which can be changed by the user. 
+The flow generator outputs flow time series in user defined resolution , Quartile flow values and Mean specific discharge at all reaches.
 
+5. Function networkprop uses Leopolds equation to compute base width in time and space. Here we also define the other network properties like Mannings roughness n, loss constant Kd (range of values)
 
+6.Function depth() uses mannings equation and uses the network propety "out" and "Qtx" flow time series to generate depth.
+Note that to save time in solving a non linear equation for each time step and location for generating depth from flow, n and s , we use a precalculated matrix of depth which is computed for a range of flow and base width for given n and s. 
+We use linear interpolation from the values of this table to calculate depth. 
+The function used for this precalculation is named ymaster.mat, which needs to be ran in a separate step.
 
-
-
-
-
+7. Hotlengh() calculates the affected downstream lengths of each reach for a range of Kd values. The output is a 3D matrix with one table of affected length in time and space for each kd.
 
 ### Usage of the code
 
-Function Network() : Is the main model where all the functions are called based on the choosen WWTP setups.
-Please refer the code for in-line comments.
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
+Function Model() is the main model code where all the functions are called based on the choosen WWTP setups.
+Please refer the code for in-line comments in the functions provided. (Definations in section: Processing)
+For further queries regarding the model working please contact the author
 ## Authors
+
 
 * **Sulagna Mishra**
 
-## Acknowledgments
+
